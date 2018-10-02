@@ -5,12 +5,16 @@
   "main": "server.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timeout 30000"
   },
   "author": "Parsh",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
     "web3": "^1.0.0-beta.36"
+  },
+  "devDependencies": {
+    "expect": "^23.6.0",
+    "mocha": "^5.2.0"
   }
 }
