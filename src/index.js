@@ -1,17 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+
+const { transactionDetails } = require('./routes/routes');
 
 class App {
   constructor() {
     this.app = express();
-    this.config();
     this.routes();
-  }
-
-  config() {
-    // configuration for the express app
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: false }));
   }
 
   routes() {
@@ -21,6 +15,8 @@ class App {
     router.get('/status', (req, res) => {
       return res.send('{status: connected}');
     });
+
+    router.get('/transaction/:txid', transactionDetails);
 
     this.app.use('/eth/api/v1', router);
   }
