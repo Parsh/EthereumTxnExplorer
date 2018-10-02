@@ -1,5 +1,52 @@
 const web3 = require('./web3');
 
+const tokenTransferDetails = txnDetails => {
+  console.log(txnDetails);
+
+  const methodID = txnDetails.input.slice(0, 10);
+  console.log('methodID:', methodID);
+
+  const recipient = txnDetails.input.slice(10, 10 + 64).replace(/^0+/, '');
+  const value = parseInt('0x' + txnDetails.input.slice(74, 74 + 64));
+
+  console.log('To: ', recipient);
+  console.log('Amount of tokens: ', value);
+
+  const details = {
+    block: {
+      blockHeight: txnDetails.blockNumber
+    },
+    outs: [
+      {
+        address: recipient,
+        value: +value, // +ve to keep internal type consistency
+        type: 'token',
+        coinspecific: {
+          tokenAddress: txnDetails.to
+        }
+      }
+    ],
+    ins: [
+      {
+        address: txnDetails.from,
+        value: -value,
+        type: 'token',
+        coinspecific: {
+          tokenAddress: txnDetails.to
+        }
+      }
+    ],
+    hash: txnDetails.hash,
+    currency: 'ETH',
+    state: txnDetails.blockNumber ? 'confirmed' : 'pending',
+    depositType: 'Contract',
+    chain: 'Eth.main'
+  };
+
+  console.log('Details: ', details);
+  return details;
+};
+
 const transferDetails = async transactionHash => {
   const txnDetails = await web3.eth.getTransaction(transactionHash);
   if (!txnDetails) {
